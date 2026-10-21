@@ -8,6 +8,8 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 
 const Person = require("../models/Person"); // Import the Person model
+const MenuItem = require("../models/MenuItem"); // Import the MenuItem model
+
 app.get("/", (req, res) => {
     res.send("Welcome to My Hotel....");
 });
@@ -32,6 +34,24 @@ app.post('/Person', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }   
 
+})
+
+app.post('/MenuItem', async (req, res) => {
+    try {
+        const data = req.body //Assuming the request body contains the menu item data   
+
+        // Create a new menu item document using the Mongoose model
+        const newMenuItem = new MenuItem(data);
+
+        // Save the new menu item document to the database
+        const response = await newMenuItem.save();
+        console.log('Menu item saved successfully:', response);
+        res.status(200).json({ message: 'Menu item saved successfully', menuItem: response });
+    } 
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 })
 
 //Get method to get the person
